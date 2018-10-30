@@ -3,7 +3,7 @@ import torch
 import torch.nn.functional as F
 
 
-def train_model(model, optimizer, train_loader, criterion):
+def train_model(model, optimizer, train_loader, criterion, zero_grad=True):
     model.train()
     loss_train = 0
     for batch in train_loader:
@@ -12,7 +12,8 @@ def train_model(model, optimizer, train_loader, criterion):
         loss = criterion(outputs, batch['label'])
         loss.backward()
         # zero-out gradient for pretrained embeddings
-        model.encoder.embedding.weight.grad[2:] = 0
+        if zero_grad:
+            model.encoder.embedding.weight.grad[2:] = 0
         optimizer.step()
         loss_train += loss.item() * \
             len(batch['label']) / len(train_loader.dataset)

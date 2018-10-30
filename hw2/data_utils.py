@@ -58,10 +58,8 @@ class TextDataset(torch.utils.data.Dataset):
         self.token2id = token2id
 
     def sent2index(self, sentence):
-        tokens_ids = [
-            self.token2id.get(token, self.token2id['<unk>']) for token in sentence
-            if token in self.token2id
-        ]
+        tokens_ids = [self.token2id.get(
+            token, self.token2id['<unk>']) for token in sentence]
         return tokens_ids
 
     def __len__(self):
